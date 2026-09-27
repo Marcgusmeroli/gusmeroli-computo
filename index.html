@@ -116,6 +116,19 @@
   .plan-upload:hover{background:rgba(255,255,255,.07);}
   .plan-upload input{display:none;}
   .plan-upload-note{font-size:11.5px;color:#a89d8c;margin-top:6px;}
+  /* vista a tutto schermo della planimetria (resta dentro l'app: sulla
+     schermata Home non c'è la barra del browser, quindi serve una X) */
+  #plan-full{position:fixed;inset:0;z-index:2000;background:#14110d;display:none;}
+  #plan-full.open{display:block;}
+  #plan-full .pf-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center;padding:8px;}
+  #plan-full img{background:#fff;border-radius:6px;max-width:100%;height:auto;transition:max-width .18s;}
+  #plan-full img.zoom{max-width:none;width:230%;cursor:zoom-out;}
+  #plan-full iframe{width:100%;height:100%;border:none;background:#fff;}
+  #plan-full .pf-close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;z-index:3;
+    width:42px;height:42px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:22px;
+    line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+  #plan-full .pf-hint{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:rgba(0,0,0,.6);color:#e0c9a0;font-size:12px;padding:7px 14px;border-radius:980px;backdrop-filter:blur(6px);}
   .plan-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:980px;background:#3a3126;color:#e0c9a0;margin-left:8px;}
 
   /* ===== telefono ===== */
@@ -210,6 +223,12 @@
   </details>
 </div>
 </div><!-- /#app -->
+
+<div id="plan-full" role="dialog" aria-label="Planimetria a tutto schermo">
+  <button class="pf-close" id="pf-close" aria-label="Chiudi">✕</button>
+  <div class="pf-scroll" id="pf-scroll"></div>
+  <div class="pf-hint" id="pf-hint">Tocca il disegno per ingrandire</div>
+</div>
 
 <script src="data.js"></script>
 <script src="planimetrie.js"></script>
@@ -532,6 +551,37 @@ function planViewerHtml(src, isPdf, titolo){
   return `<img class="plan-viewer-img" src="${src}" alt="${titolo}">`;
 }
 
+// --- vista a tutto schermo ---
+const pfEl = document.getElementById('plan-full');
+const pfScroll = document.getElementById('pf-scroll');
+const pfHint = document.getElementById('pf-hint');
+
+function apriPlanIntero(src, isPdf, titolo){
+  if(isPdf){
+    pfScroll.innerHTML = `<iframe src="${src}" title="${titolo}"></iframe>`;
+    pfHint.style.display = 'none';
+  } else {
+    pfScroll.innerHTML = `<img src="${src}" alt="${titolo}" id="pf-img">`;
+    pfHint.style.display = '';
+    const img = document.getElementById('pf-img');
+    img.addEventListener('click', ()=>{
+      img.classList.toggle('zoom');
+      pfHint.textContent = img.classList.contains('zoom')
+        ? 'Tocca di nuovo per adattare · scorri per muoverti'
+        : 'Tocca il disegno per ingrandire';
+    });
+  }
+  pfEl.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function chiudiPlanIntero(){
+  pfEl.classList.remove('open');
+  pfScroll.innerHTML = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('pf-close').addEventListener('click', chiudiPlanIntero);
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && pfEl.classList.contains('open')) chiudiPlanIntero(); });
+
 function renderPlanimetrie(){
   const el = document.getElementById('plan-list');
   const fisse = (typeof PLANIMETRIE_DATA !== 'undefined') ? PLANIMETRIE_DATA : [];
@@ -547,7 +597,7 @@ function renderPlanimetrie(){
       <div class="plan-item-head"><h3>${p.immobile}</h3><span class="plan-item-meta">letta il ${p.dataLettura||''}</span></div>
       <div class="plan-item-desc">${p.descrizione||''}</div>
       ${planViewerHtml(src, isPdf, p.immobile)}
-      <div class="plan-actions"><a href="${p.file}" target="_blank" rel="noopener">Apri a tutto schermo ↗</a></div>`;
+      <div class="plan-actions"><button type="button" data-full="${src}" data-fullpdf="${isPdf?1:0}" data-fulltitolo="${p.immobile}">Apri a tutto schermo</button></div>`;
     if(p.stanzeVisibili && p.stanzeVisibili.length){
       html += `<ul class="plan-stanze">${p.stanzeVisibili.map(s=>`<li><strong>${s.nome}</strong> — ${s.note||''}</li>`).join('')}</ul>`;
     }
@@ -565,7 +615,7 @@ function renderPlanimetrie(){
       </div>
       ${planViewerHtml(p.dataUrl, p.isPdf, p.nome)}
       <div class="plan-actions">
-        <a href="${p.dataUrl}" target="_blank" rel="noopener">Apri a tutto schermo ↗</a>
+        <button type="button" data-full="${p.dataUrl}" data-fullpdf="${p.isPdf?1:0}" data-fulltitolo="${p.nome}">Apri a tutto schermo</button>
         <button type="button" data-rimuovi="${i}">Rimuovi</button>
       </div>
     </div>`;
@@ -575,6 +625,12 @@ function renderPlanimetrie(){
     html = `<div class="plan-empty">Nessuna planimetria ancora. Caricane una qui sopra, oppure chiedimi in chat di collegarne una dalle cartelle delle operazioni.</div>`;
   }
   el.innerHTML = html;
+
+  el.querySelectorAll('button[data-full]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      apriPlanIntero(btn.dataset.full, btn.dataset.fullpdf === '1', btn.dataset.fulltitolo || '');
+    });
+  });
 
   el.querySelectorAll('button[data-rimuovi]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
