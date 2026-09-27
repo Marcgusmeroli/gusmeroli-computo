@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Computo">
+<meta name="theme-color" content="#1F1B16">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<title>Computo metrico — Gusmeroli</title>
+<style>
+  :root{
+    --bg:#f7f5f2; --card:#ffffff; --border:#e3ddd4; --text:#2b2620; --mid:#6b6259;
+    --sand:#b98b4e; --green:#3f7a4f; --red:#b34a3d; --gray_bg:#efeae3;
+  }
+  *{box-sizing:border-box;}
+  /* schermata di accesso (stesso schema dello strumento visite) */
+  #lock{position:fixed;inset:0;background:#1F1B16;display:flex;align-items:center;justify-content:center;z-index:999;padding:24px;}
+  #lock.hidden{display:none;}
+  .lock-box{width:100%;max-width:340px;text-align:center;}
+  .lock-box img{height:22px;margin-bottom:34px;filter:brightness(0) invert(1);}
+  .lock-box input{width:100%;padding:16px 18px;font-size:17px;border-radius:14px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;text-align:center;letter-spacing:2px;outline:none;margin-bottom:14px;}
+  .lock-box input::placeholder{color:rgba(255,255,255,.35);letter-spacing:0;}
+  .lock-box button{width:100%;padding:15px;border-radius:14px;border:none;background:var(--sand);color:#fff;font-weight:600;font-size:14px;cursor:pointer;}
+  .lock-err{color:#E8A090;font-size:13px;margin-top:12px;min-height:18px;}
+  #app{display:none;}
+  #app.visible{display:block;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;}
+  header{background:#1f1b16;color:#fff;padding:28px 24px;}
+  header img.logo{height:17px;width:auto;display:block;margin-bottom:8px;}
+  header h1{margin:0;font-size:14px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#cfc6b8;}
+  header p{margin:0;color:#cfc6b8;font-size:14px;max-width:760px;}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px;}
+  nav.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+  nav.tabs button{background:var(--card);border:1px solid var(--border);border-radius:980px;padding:9px 16px;font-size:13px;font-weight:600;color:var(--mid);cursor:pointer;}
+  nav.tabs button.active{background:var(--sand);border-color:var(--sand);color:#fff;}
+  section.view{display:none;}
+  section.view.active{display:block;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:16px;}
+  .card-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px;}
+  .card-head h3{margin:0;font-size:17px;}
+  .badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:980px;margin-left:8px;}
+  .badge.dettaglio{background:#e4efe6;color:var(--green);}
+  .badge.corpo{background:#f3e6d8;color:var(--sand);}
+  .badge.aggregato{background:#f5e3e0;color:var(--red);}
+  .badge.fattura_reale{background:#dfe7ef;color:#3a5c85;}
+  .meta{font-size:12.5px;color:var(--mid);margin-bottom:14px;}
+  .meta .stato{font-style:italic;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+  table th, table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--border);}
+  table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--mid);font-weight:700;}
+  table td.num, table th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .totale-row td{font-weight:700;border-top:2px solid var(--text);border-bottom:none;}
+  ul.capitolato{margin:8px 0;padding-left:20px;font-size:13px;color:var(--text);columns:2;column-gap:24px;}
+  ul.capitolato li{margin-bottom:4px;break-inside:avoid;}
+  .note{background:var(--gray_bg);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--mid);margin-top:10px;}
+  .fonte{font-size:11px;color:#a49b8c;margin-top:8px;}
+  .check{color:var(--green);font-weight:700;}
+  details.help{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-top:28px;}
+  details.help summary{cursor:pointer;font-weight:700;font-size:14px;}
+  details.help ol{font-size:13px;color:var(--mid);padding-left:20px;}
+  .excl-card{opacity:.85;}
+
+  /* calcolatore */
+  .grand-total{position:sticky;top:12px;z-index:5;background:#1f1b16;color:#fff;border-radius:14px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+  .grand-total .label{font-size:13px;color:#cfc6b8;}
+  .grand-total .value{font-size:28px;font-weight:700;font-family:inherit;}
+  .grand-total button{background:transparent;border:1px solid #574d40;color:#cfc6b8;border-radius:980px;padding:8px 14px;font-size:12px;cursor:pointer;}
+  .grand-total button:hover{background:#332c24;}
+  /* calcolatore compatto: righe strette, testo piccolo */
+  table.calc{font-size:12.5px;}
+  table.calc th, table.calc td{padding:5px 8px;}
+  table.calc td.qty{width:110px;}
+  table.calc td.prezzo-media{line-height:1.25;}
+  .card-head h3{font-size:15px;}
+  table.calc input.qty-input{width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;font-size:13px;text-align:right;font-variant-numeric:tabular-nums;}
+  table.calc input.qty-input:focus{outline:2px solid var(--sand);border-color:var(--sand);}
+  td.prezzo-media{white-space:nowrap;}
+  td.prezzo-media .range{display:block;font-size:10.5px;color:var(--mid);font-weight:400;}
+  .n1{color:var(--mid);font-style:italic;}
+  .subtotale-cat{font-weight:700;color:var(--sand);}
+  .non-calcolabili{margin-top:10px;font-size:12px;color:var(--mid);}
+
+  /* planimetria */
+  .plan-card{background:linear-gradient(135deg,#2b2620,#1f1b16);color:#fff;border-radius:16px;padding:24px 26px;margin-bottom:24px;}
+  .plan-card h2{margin:0;font-size:17px;display:inline;}
+  .plan-summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .plan-summary::-webkit-details-marker{display:none;}
+  .plan-summary::after{content:"▾";font-size:15px;color:#cfc6b8;transition:transform .2s;}
+  details[open] > .plan-summary::after{transform:rotate(180deg);}
+  details[open] > .plan-summary{margin-bottom:14px;}
+  .plan-card > .plan-sub{font-size:13px;color:#cfc6b8;margin-bottom:18px;max-width:760px;}
+  .plan-card details{background:rgba(255,255,255,.05);border-radius:10px;padding:12px 16px;margin-bottom:16px;}
+  .plan-card details summary{cursor:pointer;font-size:13px;font-weight:700;color:#e0c9a0;}
+  .plan-card details ol{font-size:12.5px;color:#cfc6b8;padding-left:20px;margin:10px 0 0;}
+  .plan-card details a{color:#e0c9a0;}
+  .plan-item{background:#14110d;border-radius:12px;padding:16px 18px;margin-bottom:12px;}
+  .plan-item-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+  .plan-item-head h3{margin:0;font-size:15px;color:#fff;}
+  .plan-item-meta{font-size:11.5px;color:#a89d8c;}
+  .plan-item-desc{font-size:12.5px;color:#cfc6b8;margin:6px 0 10px;}
+  .plan-item a.plan-file-link{color:#e0c9a0;font-size:12.5px;}
+  .plan-item ul.plan-stanze{margin:8px 0;padding-left:18px;font-size:12.5px;color:#cfc6b8;}
+  .plan-note-verificato{background:#1e2b20;border-left:3px solid #4c8a5c;border-radius:6px;padding:8px 12px;font-size:12.5px;color:#bfe0c8;margin-top:8px;}
+  .plan-empty{font-size:13px;color:#a89d8c;}
+  /* visore sempre aperto */
+  .plan-viewer{width:100%;height:300px;border:none;border-radius:10px;background:#fff;margin:12px 0 8px;display:block;}
+  .plan-viewer-img{width:100%;max-height:300px;object-fit:contain;border-radius:10px;background:#fff;margin:12px 0 8px;display:block;}
+  .plan-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px;}
+  .plan-actions a, .plan-actions button{font-size:12px;color:#e0c9a0;background:transparent;border:1px solid #574d40;border-radius:980px;padding:6px 14px;cursor:pointer;text-decoration:none;}
+  .plan-actions a:hover, .plan-actions button:hover{background:rgba(255,255,255,.07);}
+  .plan-upload{border:1.5px dashed #574d40;border-radius:12px;padding:20px;text-align:center;cursor:pointer;background:rgba(255,255,255,.03);margin-bottom:12px;font-size:13px;color:#cfc6b8;}
+  .plan-upload:hover{background:rgba(255,255,255,.07);}
+  .plan-upload input{display:none;}
+  .plan-upload-note{font-size:11.5px;color:#a89d8c;margin-top:6px;}
+  .plan-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:980px;background:#3a3126;color:#e0c9a0;margin-left:8px;}
+
+  /* ===== telefono ===== */
+  @media(max-width:700px){
+    body{-webkit-text-size-adjust:100%;}
+    header{padding:calc(20px + env(safe-area-inset-top)) 16px 20px;}
+    .wrap{padding:16px 12px calc(40px + env(safe-area-inset-bottom));}
+    .card, .plan-card{padding:16px 14px;border-radius:14px;}
+    .grand-total{padding:14px 16px;top:6px;}
+    .grand-total .value{font-size:24px;}
+    /* due righe per voce: nome sopra, unità/prezzo/quantità/importo sotto */
+    table.calc thead{display:none;}
+    table.calc tbody tr{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;padding:9px 0;border-bottom:1px solid var(--border);}
+    table.calc tbody td{display:block;border:none;padding:0;}
+    table.calc tbody td:nth-child(1){flex:1 1 100%;font-weight:600;font-size:13px;line-height:1.3;}
+    table.calc tbody td:nth-child(2){font-size:11px;color:var(--mid);}
+    table.calc tbody td:nth-child(3){font-size:11.5px;text-align:left;}
+    table.calc .prezzo-media .range{display:none;}
+    table.calc tbody td:nth-child(4){margin-left:auto;width:auto;}
+    table.calc input.qty-input{width:74px;text-align:right;font-size:16px;padding:6px 8px;}
+    table.calc tbody td:nth-child(5){min-width:74px;text-align:right;font-weight:700;font-size:12.5px;}
+    /* linguette su una riga sola, scorrevoli */
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}
+    nav.tabs button{flex:0 0 auto;}
+    /* tabelle delle schede "fonti": scorrimento orizzontale invece di rompersi */
+    section.view table:not(.calc){display:block;overflow-x:auto;white-space:nowrap;}
+    ul.capitolato{columns:1;}
+    .plan-viewer, .plan-viewer-img{height:auto;max-height:220px;}
+    .altezza-helper{flex-wrap:wrap;}
+    .altezza-helper input{font-size:16px;}
+    nav.tabs button{font-size:12px;padding:8px 13px;}
+  }
+
+  /* ===== tablet (iPad verticale e orizzontale) ===== */
+  @media(min-width:701px) and (max-width:1100px){
+    header{padding:calc(24px + env(safe-area-inset-top)) 20px 22px;}
+    .wrap{padding:18px 16px calc(50px + env(safe-area-inset-bottom));}
+    .card, .plan-card{padding:18px 18px;}
+    table{font-size:12.5px;}
+    table th, table td{padding:7px 6px;}
+    table.calc input.qty-input{width:80px;font-size:16px;}
+    ul.capitolato{columns:1;}
+    .plan-viewer, .plan-viewer-img{max-height:260px;}
+    .grand-total .value{font-size:26px;}
+  }
+
+  /* helper altezza soffitto nel calcolatore */
+  .altezza-helper{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;color:var(--mid);}
+  .altezza-helper input{width:60px;padding:4px 6px;border-radius:6px;border:1px solid var(--border);text-align:right;font-size:12px;}
+  .altezza-helper button{background:var(--gray_bg);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--text);}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <div class="lock-box">
+    <img src="logo.png" alt="Gusmeroli">
+    <input type="password" id="lockInput" placeholder="Password" autocomplete="off" autocapitalize="off" autocorrect="off">
+    <button id="lockBtn">Entra</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<div id="app">
+<header>
+  <img class="logo" src="logo.png" alt="Gusmeroli">
+  <h1>Computo metrico</h1>
+</header>
+<div class="wrap">
+  <details class="plan-card" id="plan-card" open>
+    <summary class="plan-summary"><h2>📐 Planimetrie</h2></summary>
+    <div class="plan-upload" id="plan-upload">
+      📎 Carica una planimetria (foto o PDF) — resta visibile qui, salvata solo nel tuo browser
+      <input type="file" id="plan-upload-input" accept="image/*,application/pdf">
+      <div class="plan-upload-note" id="plan-upload-note">Nessun invio a server, nessun costo. Per farmi leggere le misure, dimmelo in chat.</div>
+    </div>
+    <div id="plan-list"></div>
+  </details>
+
+  <nav class="tabs" id="tabs"></nav>
+  <section class="view" id="view-calcolatore"></section>
+  <div id="categorie-views"></div>
+  <section class="view" id="view-esclusi"></section>
+
+  <details class="help">
+    <summary>Come aggiungere un nuovo preventivo</summary>
+    <ol>
+      <li>Metti il PDF/Excel nuovo dentro <code>~/Desktop/ecosistema/PREVENTIVI/</code>.</li>
+      <li>Chiedi a Claude di leggerlo e aggiungerlo. Per le scansioni senza testo, Claude usa l'OCR posizionale (Vision di macOS, script in <code>ocr_pdf_bbox.swift</code> in questa cartella) e verifica sempre la tabella ricostruita risommandola contro il totale scritto sul documento — se non torna, segnala il file invece di indovinare i numeri.</li>
+      <li>I dati vivono in <code>data.js</code> (non <code>fetch()</code> di un JSON, così l'app funziona anche aprendo <code>index.html</code> a doppio clic, senza server locale). Ogni voce con un prezzo per unità ha un campo <code>chiave</code>: è così che il calcolatore raggruppa la stessa lavorazione tra fornitori diversi e ne fa la media — più preventivi aggiungi, più la media diventa affidabile.</li>
+    </ol>
+  </details>
+</div>
+</div><!-- /#app -->
+
+<script src="data.js"></script>
+<script src="planimetrie.js"></script>
+<script>
+// ===== ACCESSO =====
+// Stessa password dello strumento visite. Per cambiarla: genera il nuovo hash
+// SHA-256 e sostituisci PASSWORD_HASH.
+const PASSWORD_HASH = "3fe3f3424c3647c23c88c82e815f3628748bf0a4871651a46ee0b2b0fc77420e";
+const UNLOCK_KEY = "gc_unlocked_v1";
+
+async function sha256(text){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+async function tryUnlock(){
+  const hash = await sha256(document.getElementById("lockInput").value);
+  if(hash === PASSWORD_HASH){
+    localStorage.setItem(UNLOCK_KEY, "1");
+    document.getElementById("lock").classList.add("hidden");
+    document.getElementById("app").classList.add("visible");
+  } else {
+    document.getElementById("lockErr").textContent = "Password errata";
+    document.getElementById("lockInput").value = "";
+  }
+}
+if(localStorage.getItem(UNLOCK_KEY) === "1"){
+  document.getElementById("lock").classList.add("hidden");
+  document.getElementById("app").classList.add("visible");
+}
+document.getElementById("lockBtn").addEventListener("click", tryUnlock);
+document.getElementById("lockInput").addEventListener("keydown", e => { if(e.key === "Enter") tryUnlock(); });
+
+// Etichette brevi per il calcolatore: la descrizione completa del fornitore
+// resta visibile nelle schede "(fonti)", qui serve una riga corta e scorrevole.
+const ETICHETTE_BREVI = {
+  "elettrico:punto_luce_semplice": "Punto luce",
+  "elettrico:comando_un_interruttore": "Comando 1 interruttore",
+  "elettrico:comando_due_deviatori": "Comando 2 deviatori",
+  "elettrico:comando_un_invertitore": "Comando 1 invertitore",
+  "elettrico:punto_termostato": "Punto termostato",
+  "elettrico:punto_pulsante_targa": "Pulsante con targa",
+  "elettrico:punto_suoneria": "Suoneria 230V",
+  "elettrico:presa_10a": "Presa 10A",
+  "elettrico:presa_10_16a": "Presa 10-16A",
+  "elettrico:presa_schuko": "Presa Schuko",
+  "elettrico:comando_tapparelle": "Comando tapparelle",
+  "elettrico:presa_tv": "Presa TV",
+  "elettrico:placchette": "Placchette",
+  "elettrico:videocitofono": "Videocitofono",
+  "elettrico:centralino_12_moduli": "Centralino 12 moduli",
+  "elettrico:predisposizione_caldaia": "Predisp. caldaia",
+  "elettrico:linea_circuito": "Linea circuito",
+  "elettrico:predisposizione_telefono": "Predisp. telefono",
+  "elettrico:interruttore_generale": "Interruttore generale",
+  "elettrico:smantellamento_impianto": "Smantellamento impianto",
+  "idraulico:caldaia_24kw": "Caldaia 24 kW",
+  "idraulico:defangatore": "Defangatore",
+  "idraulico:canna_fumaria": "Canna fumaria",
+  "idraulico:collegamento_caldaia": "Collegamento caldaia",
+  "idraulico:impianto_sanitario_completo": "Impianto sanitario",
+  "idraulico:tubazioni_termosifoni": "Tubazioni termosifoni",
+  "idraulico:spostamento_contatore_acqua": "Spostamento contatore acqua",
+  "idraulico:attacco_cucina": "Attacco cucina",
+  "idraulico:valvola_termosifone": "Valvola termosifone",
+  "idraulico:materiale_montaggio_bagno": "Materiale bagno/cucina",
+  "idraulico:manodopera_generica": "Manodopera idraulico",
+  "serramenti:finestra_pvc_2ante": "Finestra PVC 2 ante",
+  "serramenti:cassonetto_pvc": "Cassonetto PVC",
+  "pavimenti:posa_zoccolino_m": "Posa zoccolino",
+  "pavimenti:posa_piastrella_mq": "Posa piastrelle",
+  "murature:rimozione_controsoffitto_m": "Rimozione controsoffitto",
+  "murature:rimozione_zoccolino_m": "Rimozione zoccolino",
+  "murature:rimozione_rivestimento_bagno_m": "Rimozione rivestimento bagno",
+  "murature:cartongesso_singola_lastra_m": "Cartongesso lastra singola",
+  "murature:cartongesso_doppia_lastra_m": "Cartongesso doppia lastra",
+  "murature:rasatura_mq": "Rasatura pareti + soffitto",
+  "murature:pittura_2mani_mq": "Pittura 2 mani"
+};
+
+function eur(n){
+  if(n==null||isNaN(n)) return "—";
+  return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+}
+function num(n, d){
+  if(n==null||isNaN(n)) return "—";
+  return n.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:d||2});
+}
+
+function importoVoce(v){
+  if(v.prezzoUnitario!=null) return v.quantita*v.prezzoUnitario;
+  if(v.importoRigo!=null) return v.importoRigo;
+  return null;
+}
+function sommaVoci(voci){
+  return voci.reduce((s,v)=>s+(importoVoce(v)||0),0);
+}
+// prezzo per singola unità: dichiarato dal fornitore, oppure ricavato da importo di riga ÷ quantità
+function prezzoEffettivo(v){
+  if(v.prezzoUnitario!=null) return v.prezzoUnitario;
+  if(v.importoRigo!=null && v.quantita>0) return v.importoRigo/v.quantita;
+  return null;
+}
+
+function renderPreventivoCard(p){
+  const tipoLabel = {dettaglio:"Dettaglio per voce", corpo:"A corpo", aggregato:"Aggregato", fattura_reale:"Fattura reale"}[p.tipo] || p.tipo;
+  let html = `<div class="card">
+    <div class="card-head">
+      <h3>${p.fornitore}<span class="badge ${p.tipo}">${tipoLabel}</span></h3>
+      <span class="meta">${p.data || ""}</span>
+    </div>
+    <div class="meta"><strong>${p.immobile}</strong> — <span class="stato">${p.immobileStato||""}</span></div>`;
+
+  if(p.tipo === "dettaglio" || p.tipo === "fattura_reale"){
+    const somma = sommaVoci(p.voci);
+    const dichiarato = p.totaleDichiarato;
+    const match = dichiarato!=null && Math.abs(somma-dichiarato) < 0.02;
+    html += `<table><thead><tr><th>Descrizione</th><th class="num">Q.tà</th><th>Unità</th><th class="num">Prezzo unit.</th><th class="num">Importo</th></tr></thead><tbody>`;
+    p.voci.forEach(v=>{
+      html += `<tr><td>${v.descrizione}</td><td class="num">${num(v.quantita)}</td><td>${v.unita}</td><td class="num">${v.prezzoUnitario!=null?eur(v.prezzoUnitario):"—"}</td><td class="num">${eur(importoVoce(v))}</td></tr>`;
+    });
+    const ivaNote = p.ivaAliquota ? ` + IVA ${(p.ivaAliquota*100).toFixed(0)}%` : (p.ivaInclusa===false ? " (IVA esclusa)" : "");
+    html += `<tr class="totale-row"><td colspan="4">Totale${p.ivaAliquota?" (imponibile"+ivaNote+")":ivaNote}</td><td class="num">${eur(dichiarato!=null?dichiarato:somma)}</td></tr>`;
+    html += `</tbody></table>`;
+    if(dichiarato!=null){
+      html += `<div class="fonte">${match ? '<span class="check">✓ verificato</span> — somma delle voci uguale al totale scritto nel documento.' : 'Somma voci: '+eur(somma)+' — differenza dal totale dichiarato, verificare.'}</div>`;
+    }
+  } else if(p.tipo === "corpo"){
+    html += `<ul class="capitolato">${p.capitolato.map(c=>`<li>${c}</li>`).join("")}</ul>`;
+    html += `<table><tbody><tr class="totale-row"><td>Totale a corpo</td><td class="num">${eur(p.totaleCorpo)}</td></tr></tbody></table>`;
+  } else if(p.tipo === "aggregato"){
+    html += `<ul class="capitolato">${(p.righeNote||[]).map(c=>`<li>${c}</li>`).join("")}</ul>`;
+    html += `<table><tbody>`;
+    html += `<tr class="totale-row"><td>Totale dichiarato</td><td class="num">${eur(p.totaleDichiarato)}</td></tr>`;
+    if(p.totaleConEnea) html += `<tr><td>Totale con pratica ENEA</td><td class="num">${eur(p.totaleConEnea)}</td></tr>`;
+    if(p.mqTotaliDichiarati){
+      const perMq = p.totaleDichiarato / p.mqTotaliDichiarati;
+      html += `<tr><td><em>€/mq aggregato (calcolato, non dichiarato dal fornitore)</em></td><td class="num">${eur(perMq)}</td></tr>`;
+    }
+    html += `</tbody></table>`;
+  }
+
+  if(p.note) html += `<div class="note">${p.note}</div>`;
+  html += `<div class="fonte">Fonte: ${p.fonte}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderCategoria(cat){
+  let html = `<section class="view" id="view-${cat.id}">`;
+  cat.preventivi.forEach(p=>{ html += renderPreventivoCard(p); });
+  html += `</section>`;
+  return html;
+}
+
+function renderEsclusi(){
+  let html = `<h2 style="font-size:16px;">Fuori dal confronto</h2>`;
+  PREVENTIVI_DATA.esclusi.forEach(e=>{
+    html += `<div class="card excl-card">
+      <div class="card-head"><h3>${e.fornitore}</h3><span class="meta">${e.data||""}</span></div>
+      <div class="meta"><strong>${e.immobile}</strong></div>
+      <table><tbody><tr class="totale-row"><td>Totale</td><td class="num">${eur(e.totale)}</td></tr></tbody></table>
+      <div class="note">${e.motivo}</div>
+      <div class="fonte">Fonte: ${e.fonte}</div>
+    </div>`;
+  });
+  return html;
+}
+
+// ===== CALCOLATORE =====
+const QTY_KEY = "comparatore_preventivi_quantita_v1";
+function loadQty(){ try{ return JSON.parse(localStorage.getItem(QTY_KEY)) || {}; }catch(e){ return {}; } }
+function saveQty(q){ localStorage.setItem(QTY_KEY, JSON.stringify(q)); }
+let QTY = loadQty();
+
+// gruppi[chiave] = {unita, categoria, descrizione, prezzi:[...], nonCalcolabili non qui}
+function costruisciGruppi(){
+  const gruppi = {};
+  PREVENTIVI_DATA.categorie.forEach(cat=>{
+    cat.preventivi.forEach(p=>{
+      (p.voci||[]).forEach(v=>{
+        if(!v.chiave) return;
+        const pu = prezzoEffettivo(v);
+        if(pu==null) return;
+        if(!gruppi[v.chiave]) gruppi[v.chiave] = {unita: v.unita, categoriaId: cat.id, categoria: cat.nome, descrizione: v.descrizione, prezzi: []};
+        gruppi[v.chiave].prezzi.push(pu);
+      });
+    });
+  });
+  return gruppi;
+}
+
+function voceNonCalcolabilePresente(cat){
+  // true se la categoria ha almeno un preventivo a corpo/aggregato, o voci senza chiave
+  return cat.preventivi.some(p => p.tipo==="corpo" || p.tipo==="aggregato" ||
+    (p.voci||[]).some(v=>!v.chiave));
+}
+
+function aggiornaRiga(chiave, avg){
+  const q = parseFloat(document.getElementById('qty-'+chiave).value) || 0;
+  const importo = q*avg;
+  document.getElementById('imp-'+chiave).textContent = eur(importo);
+  return importo;
+}
+
+function ricalcolaTotali(gruppi){
+  let grandTotal = 0;
+  const subtotaliPerCat = {};
+  Object.keys(gruppi).forEach(k=>{
+    const g = gruppi[k];
+    const avg = g.prezzi.reduce((a,b)=>a+b,0)/g.prezzi.length;
+    const importo = aggiornaRiga(k, avg);
+    grandTotal += importo;
+    subtotaliPerCat[g.categoriaId] = (subtotaliPerCat[g.categoriaId]||0) + importo;
+  });
+  Object.keys(subtotaliPerCat).forEach(catId=>{
+    const el = document.getElementById('subtot-'+catId);
+    if(el) el.textContent = eur(subtotaliPerCat[catId]);
+  });
+  document.getElementById('grand-total-value').textContent = eur(grandTotal);
+}
+
+function renderCalcolatore(){
+  const gruppi = costruisciGruppi();
+  let html = `<div class="grand-total">
+    <div><div class="label">Totale stimato in base alle quantità inserite</div><div class="value" id="grand-total-value">0,00 €</div></div>
+    <button id="btn-azzera">Azzera tutti i valori</button>
+  </div>`;
+
+  PREVENTIVI_DATA.categorie.forEach(cat=>{
+    const chiaviCat = Object.keys(gruppi).filter(k=>gruppi[k].categoriaId===cat.id).sort();
+    if(chiaviCat.length===0) return;
+    html += `<div class="card">
+      <div class="card-head"><h3>${cat.nome}</h3><span class="subtotale-cat" id="subtot-${cat.id}">0,00 €</span></div>
+      <table class="calc"><thead><tr>
+        <th>Lavorazione</th><th>Unità</th><th class="num">Prezzo medio</th><th class="qty num">Quantità</th><th class="num">Importo</th>
+      </tr></thead><tbody>`;
+    chiaviCat.forEach(k=>{
+      const g = gruppi[k];
+      const avg = g.prezzi.reduce((a,b)=>a+b,0)/g.prezzi.length;
+      const min = Math.min(...g.prezzi), max = Math.max(...g.prezzi);
+      const rangeLabel = g.prezzi.length>1 ? `<span class="range">min ${eur(min)} · max ${eur(max)} · ${g.prezzi.length} fonti</span>` : `<span class="range n1">1 solo dato finora</span>`;
+      const savedQty = QTY[k] ?? "";
+      const isPittura = k === 'murature:pittura_2mani_mq';
+      const etichetta = ETICHETTE_BREVI[k] || g.descrizione;
+      html += `<tr>
+        <td title="${g.descrizione.replace(/"/g,'&quot;')}">${etichetta}${isPittura ? `
+          <div class="altezza-helper">
+            perimetro <input type="number" min="0" step="any" id="pittura-perimetro"> m × altezza soffitto <input type="number" min="0" step="any" id="pittura-altezza" value="2.70"> m
+            <button type="button" id="pittura-calcola">→ calcola mq</button>
+          </div>` : ''}</td>
+        <td>${g.unita}</td>
+        <td class="num prezzo-media">${eur(avg)}${rangeLabel}</td>
+        <td class="qty"><input type="number" min="0" step="any" inputmode="decimal" class="qty-input" id="qty-${k}" data-chiave="${k}" value="${savedQty}" placeholder="0"></td>
+        <td class="num" id="imp-${k}">0,00 €</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    if(voceNonCalcolabilePresente(cat)){
+      html += `<div class="non-calcolabili">Altre lavorazioni di questa categoria sono quotate solo "a corpo" da almeno un fornitore (nessun prezzo per singola unità dichiarato) e non compaiono qui — le trovi nella scheda "${cat.nome}" tra i preventivi analizzati.</div>`;
+    }
+    html += `</div>`;
+  });
+
+  document.getElementById('view-calcolatore').innerHTML = html;
+
+  document.querySelectorAll('.qty-input').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const k = inp.dataset.chiave;
+      const val = inp.value;
+      if(val==="" ) delete QTY[k]; else QTY[k] = val;
+      saveQty(QTY);
+      ricalcolaTotali(gruppi);
+    });
+  });
+  document.getElementById('btn-azzera').addEventListener('click', ()=>{
+    QTY = {};
+    saveQty(QTY);
+    document.querySelectorAll('.qty-input').forEach(inp=>inp.value="");
+    ricalcolaTotali(gruppi);
+  });
+
+  const pitturaCalcolaBtn = document.getElementById('pittura-calcola');
+  if(pitturaCalcolaBtn){
+    pitturaCalcolaBtn.addEventListener('click', ()=>{
+      const perimetro = parseFloat(document.getElementById('pittura-perimetro').value) || 0;
+      const altezza = parseFloat(document.getElementById('pittura-altezza').value) || 0;
+      const mq = perimetro * altezza;
+      const target = document.getElementById('qty-murature:pittura_2mani_mq');
+      target.value = mq > 0 ? mq.toFixed(2) : '';
+      target.dispatchEvent(new Event('input'));
+    });
+  }
+
+  ricalcolaTotali(gruppi);
+}
+
+// ===== PLANIMETRIE (nessuna chiamata API, nessun costo) =====
+// Le planimetrie "ufficiali" vivono in planimetrie.js; quelle che Marco carica
+// dal browser restano in localStorage e vengono mostrate insieme alle altre.
+const PLAN_UPLOAD_KEY = "comparatore_preventivi_planimetrie_caricate_v1";
+
+function loadPlanCaricate(){
+  try { return JSON.parse(localStorage.getItem(PLAN_UPLOAD_KEY)) || []; }
+  catch(e){ return []; }
+}
+function savePlanCaricate(list){
+  try {
+    localStorage.setItem(PLAN_UPLOAD_KEY, JSON.stringify(list));
+    return true;
+  } catch(e){
+    return false; // quota superata
+  }
+}
+
+function planViewerHtml(src, isPdf, titolo){
+  if(isPdf){
+    // #view=Fit mostra l'intera pagina dentro il riquadro ridotto
+    return `<iframe class="plan-viewer" src="${src}#view=Fit&toolbar=0" title="${titolo}"></iframe>`;
+  }
+  return `<img class="plan-viewer-img" src="${src}" alt="${titolo}">`;
+}
+
+function renderPlanimetrie(){
+  const el = document.getElementById('plan-list');
+  const fisse = (typeof PLANIMETRIE_DATA !== 'undefined') ? PLANIMETRIE_DATA : [];
+  const caricate = loadPlanCaricate();
+  let html = '';
+
+  fisse.forEach(p=>{
+    // se c'è un'anteprima immagine la usiamo: mostra il disegno intero, senza
+    // la barra del visore PDF del browser
+    const src = p.anteprima || p.file;
+    const isPdf = !p.anteprima && /\.pdf($|\?)/i.test(p.file);
+    html += `<div class="plan-item">
+      <div class="plan-item-head"><h3>${p.immobile}</h3><span class="plan-item-meta">letta il ${p.dataLettura||''}</span></div>
+      <div class="plan-item-desc">${p.descrizione||''}</div>
+      ${planViewerHtml(src, isPdf, p.immobile)}
+      <div class="plan-actions"><a href="${p.file}" target="_blank" rel="noopener">Apri a tutto schermo ↗</a></div>`;
+    if(p.stanzeVisibili && p.stanzeVisibili.length){
+      html += `<ul class="plan-stanze">${p.stanzeVisibili.map(s=>`<li><strong>${s.nome}</strong> — ${s.note||''}</li>`).join('')}</ul>`;
+    }
+    if(p.nota){
+      html += `<div class="plan-note-verificato">✓ ${p.nota}</div>`;
+    }
+    html += `</div>`;
+  });
+
+  caricate.forEach((p, i)=>{
+    html += `<div class="plan-item">
+      <div class="plan-item-head">
+        <h3>${p.nome}<span class="plan-badge">caricata da te</span></h3>
+        <span class="plan-item-meta">${p.data}</span>
+      </div>
+      ${planViewerHtml(p.dataUrl, p.isPdf, p.nome)}
+      <div class="plan-actions">
+        <a href="${p.dataUrl}" target="_blank" rel="noopener">Apri a tutto schermo ↗</a>
+        <button type="button" data-rimuovi="${i}">Rimuovi</button>
+      </div>
+    </div>`;
+  });
+
+  if(!html){
+    html = `<div class="plan-empty">Nessuna planimetria ancora. Caricane una qui sopra, oppure chiedimi in chat di collegarne una dalle cartelle delle operazioni.</div>`;
+  }
+  el.innerHTML = html;
+
+  el.querySelectorAll('button[data-rimuovi]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = parseInt(btn.dataset.rimuovi, 10);
+      const list = loadPlanCaricate();
+      list.splice(idx, 1);
+      savePlanCaricate(list);
+      renderPlanimetrie();
+    });
+  });
+}
+
+// --- caricamento file ---
+const planUploadBox = document.getElementById('plan-upload');
+const planUploadInput = document.getElementById('plan-upload-input');
+const planUploadNote = document.getElementById('plan-upload-note');
+
+planUploadBox.addEventListener('click', ()=>planUploadInput.click());
+planUploadBox.addEventListener('dragover', (e)=>{ e.preventDefault(); planUploadBox.style.background='rgba(255,255,255,.09)'; });
+planUploadBox.addEventListener('dragleave', ()=>{ planUploadBox.style.background=''; });
+planUploadBox.addEventListener('drop', (e)=>{
+  e.preventDefault();
+  planUploadBox.style.background='';
+  if(e.dataTransfer.files[0]) accettaPlanimetria(e.dataTransfer.files[0]);
+});
+planUploadInput.addEventListener('change', (e)=>{
+  if(e.target.files[0]) accettaPlanimetria(e.target.files[0]);
+  e.target.value = '';
+});
+
+function notaUpload(msg, isError){
+  planUploadNote.textContent = msg;
+  planUploadNote.style.color = isError ? '#e5a08a' : '#a89d8c';
+}
+
+function accettaPlanimetria(file){
+  const isPdf = file.type === 'application/pdf';
+  if(!isPdf && !file.type.startsWith('image/')){
+    notaUpload('Formato non valido: serve una foto o un PDF.', true);
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const dataUrl = e.target.result;
+    if(isPdf){
+      salvaPlanimetria(file.name, dataUrl, true);
+    } else {
+      // ridimensiona le foto per non saturare lo spazio del browser
+      const img = new Image();
+      img.onload = ()=>{
+        const maxSide = 2200;
+        let {width, height} = img;
+        if(width > maxSide || height > maxSide){
+          const scale = maxSide / Math.max(width, height);
+          width = Math.round(width*scale); height = Math.round(height*scale);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0,0,width,height);
+        ctx.drawImage(img, 0, 0, width, height);
+        salvaPlanimetria(file.name, canvas.toDataURL('image/jpeg', 0.88), false);
+      };
+      img.onerror = ()=>notaUpload('Non sono riuscito a leggere questa immagine.', true);
+      img.src = dataUrl;
+    }
+  };
+  reader.onerror = ()=>notaUpload('Errore nella lettura del file.', true);
+  reader.readAsDataURL(file);
+}
+
+function salvaPlanimetria(nome, dataUrl, isPdf){
+  const list = loadPlanCaricate();
+  list.push({
+    nome,
+    dataUrl,
+    isPdf,
+    data: new Date().toLocaleDateString('it-IT')
+  });
+  if(savePlanCaricate(list)){
+    notaUpload('Planimetria caricata — resta qui sotto anche se chiudi la pagina.', false);
+    renderPlanimetrie();
+  } else {
+    notaUpload('File troppo grande per lo spazio del browser: rimuovi una planimetria già caricata, oppure passamelo in chat e lo collego stabilmente.', true);
+  }
+}
+
+// Su telefono la sezione parte chiusa: resta solo il titolo, per non occupare
+// mezza schermata prima di arrivare al computo.
+if(window.matchMedia('(max-width:700px)').matches){
+  document.getElementById('plan-card').removeAttribute('open');
+}
+
+renderPlanimetrie();
+
+// ===== costruzione tab + viste =====
+const tabsEl = document.getElementById('tabs');
+const catViewsEl = document.getElementById('categorie-views');
+let tabIds = [];
+
+function addTab(id, label){
+  const btn = document.createElement('button');
+  btn.textContent = label;
+  btn.dataset.tab = id;
+  btn.addEventListener('click', ()=>showTab(id));
+  tabsEl.appendChild(btn);
+  tabIds.push(id);
+}
+
+addTab('calcolatore', 'Calcolatore');
+renderCalcolatore();
+
+PREVENTIVI_DATA.categorie.forEach(cat=>{
+  addTab(cat.id, cat.nome + " (fonti)");
+  catViewsEl.insertAdjacentHTML('beforeend', renderCategoria(cat));
+});
+
+addTab('esclusi', 'Esclusi');
+document.getElementById('view-esclusi').innerHTML = renderEsclusi();
+
+function showTab(id){
+  tabIds.forEach(t=>{
+    document.getElementById('view-'+t).classList.toggle('active', t===id);
+  });
+  Array.from(tabsEl.children).forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+}
+showTab('calcolatore');
+</script>
+</body>
+</html>

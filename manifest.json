@@ -1,0 +1,12 @@
+{
+  "name": "Gusmeroli — Computo metrico",
+  "short_name": "Computo",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#1F1B16",
+  "theme_color": "#1F1B16",
+  "icons": [
+    { "src": "icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
