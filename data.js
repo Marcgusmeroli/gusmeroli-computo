@@ -7,7 +7,7 @@
 // dentro index.html.
 
 const PREVENTIVI_DATA = {
-  generato: "2026-09-27",
+  generato: "2026-09-28",
   categorie: [
     {
       id: "elettrico",
@@ -189,6 +189,51 @@ const PREVENTIVI_DATA = {
           totaleDichiarato: 6700.0,
           totaleConEnea: 7000.0,
           note: "Prezzo a corpo per le 4 finestre nel loro insieme, non per singola finestra (per questo 'Prezzo unit.' è vuoto). Totale 6.700€; con pratica ENEA opzionale (+300€) diventa 7.000€ — non incluso nelle voci sopra."
+        },
+        {
+          fornitore: "LM Serramenti (LM Contract S.r.l.)",
+          immobile: "Seregno (MB)",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2025-10-06",
+          fonte: "la moderna due.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          voci: [
+            { descrizione: "Serramenti PVC bianchi con ribalta: 2× 1100×1650mm + 2× 2100×1650mm, coprifili interni, fornitura e posa", quantita: 4, unita: "pz", prezzoUnitario: null, importoRigo: 4400.0, chiave: "serramenti:finestra_pvc_2ante" },
+            { descrizione: "Cassonetti da restauro in PVC bianchi (2× 1500 + 2× 2500mm, con celini e profilo piatto)", quantita: 4, unita: "pz", prezzoUnitario: null, importoRigo: 1140.0, chiave: "serramenti:cassonetto_pvc" }
+          ],
+          totaleDichiarato: 5540.0,
+          note: "Stesse 4 finestre di Serplast/The Project. Prezzi a gruppo (4 finestre insieme, 4 cassonetti insieme): il prezzo per pezzo in media è ricavato dividendo per 4. Inclusi smontaggio esistente, posa, trasporto e rilievo. Pagamento diretto: 6.094€ IVA 10% compresa (2 rate da 3.047€); opzione con detrazione 50%: 3.566,51€ + 10 rate annuali da 356,65€. Pratica ENEA opzionale 268,40€ IVA compresa. Referente commerciale: Michel Lucernini."
+        },
+        {
+          fornitore: "Valsecchi Serramenti S.r.l.",
+          immobile: "Lecco, via Marco d'Oggiono",
+          immobileStato: "probabile — stessa data del preventivo SACI per Lecco (25/09/26), ma l'indirizzo non è scritto nel documento",
+          data: "2026-09-25",
+          fonte: "GUSMEROLI.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.10,
+          fattoreSconto: 18500 / 23490,
+          voci: [
+            { descrizione: "Finestra 1 anta con ribalta 700×1500mm (PVC Veka Softline MD76, bianco int. / ciliegio est.)", quantita: 4, unita: "pz", prezzoUnitario: 552.0, chiave: "serramenti:finestra_pvc_1anta" },
+            { descrizione: "Finestra 2 ante con ribalta 1200×1500mm", quantita: 1, unita: "pz", prezzoUnitario: 985.0, chiave: "serramenti:finestra_pvc_2ante" },
+            { descrizione: "Portafinestra 2 ante con ribalta 1200×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 1571.0, chiave: "serramenti:portafinestra_pvc_2ante" },
+            { descrizione: "Portafinestra 1 anta con ribalta 700×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 875.0, chiave: "serramenti:portafinestra_pvc_1anta" },
+            { descrizione: "Finestra 2 ante con ribalta + sottoluce fisso 1050×2333mm", quantita: 2, unita: "pz", prezzoUnitario: 1241.0, chiave: "serramenti:finestra_pvc_2ante_sottoluce" },
+            { descrizione: "Finestra 2 ante con ribalta + sottoluce fisso 1072×2333mm", quantita: 2, unita: "pz", prezzoUnitario: 1246.0, chiave: "serramenti:finestra_pvc_2ante_sottoluce" },
+            { descrizione: "Cassonetto PVC 1000×400mm", quantita: 6, unita: "pz", prezzoUnitario: 138.0, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Cassonetto PVC 1500×400mm", quantita: 3, unita: "pz", prezzoUnitario: 182.0, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Cassonetto PVC 2500×400mm", quantita: 2, unita: "pz", prezzoUnitario: 270.0, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Piatto scatolato 80mm (12 barre da 6,5m)", quantita: 1, unita: "corpo", prezzoUnitario: 437.0 },
+            { descrizione: "Tapparelle PVC profilo pesante mod. Suprema, tinta unita", quantita: 30, unita: "mq", prezzoUnitario: 80.0, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Kit motorizzazione tapparella con meccaniche", quantita: 11, unita: "pz", prezzoUnitario: 280.0, chiave: "serramenti:motorizzazione_tapparella" },
+            { descrizione: "Guide scorrimento tapparella (eventuali, 15€/ml, non conteggiate)", quantita: 44, unita: "ml", prezzoUnitario: 0.0 },
+            { descrizione: "Trasporto, smontaggio e smaltimento esistenti, posa in opera", quantita: 13, unita: "pz", prezzoUnitario: 200.0, chiave: "serramenti:posa_smaltimento_pz" },
+            { descrizione: "Sconto (totale listino 23.490€ → scontato 18.500€, −21,2%)", quantita: 1, unita: "corpo", prezzoUnitario: null, importoRigo: -4990.0 }
+          ],
+          totaleDichiarato: 18500.0,
+          note: "Preventivo n. 2583, 13 serramenti. Prezzi unitari qui sopra = LISTINO scritto nel documento; nelle medie del calcolatore entrano già scontati del 21,2% (fattore 18.500/23.490), perché è il prezzo reale offerto. Somma listino verificata: 23.490€ come i riporti di pagina. Scontato 18.500€ + IVA 10% = 20.350€. A differenza degli altri preventivi serramenti, qui posa e smaltimento sono a parte (200€/pz), non inclusi nel prezzo della finestra. Validità 60 gg, garanzia 10 anni."
         },
         {
           fornitore: "New F&R Infissi",

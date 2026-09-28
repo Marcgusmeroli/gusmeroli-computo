@@ -410,8 +410,10 @@ function costruisciGruppi(){
     cat.preventivi.forEach(p=>{
       (p.voci||[]).forEach(v=>{
         if(!v.chiave) return;
-        const pu = prezzoEffettivo(v);
+        let pu = prezzoEffettivo(v);
         if(pu==null) return;
+        // sconto sul totale del preventivo: in media entra il prezzo reale offerto, non il listino
+        if(p.fattoreSconto) pu *= p.fattoreSconto;
         if(!gruppi[v.chiave]) gruppi[v.chiave] = {unita: v.unita, categoriaId: cat.id, categoria: cat.nome, descrizione: v.descrizione, prezzi: []};
         gruppi[v.chiave].prezzi.push(pu);
       });
