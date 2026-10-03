@@ -7,7 +7,7 @@
 // dentro index.html.
 
 const PREVENTIVI_DATA = {
-  generato: "2026-09-28",
+  generato: "2026-10-03",
   categorie: [
     {
       id: "elettrico",
@@ -88,6 +88,50 @@ const PREVENTIVI_DATA = {
             "2 punti presa cameretta", "quadro elettrico 12 moduli completo"
           ],
           note: "Preventivo a corpo, nessun prezzo per singola voce nel documento."
+        },
+        {
+          fornitore: "Elettricista \"padre e figlio\" (nome non scritto nel documento)",
+          immobile: "Lecco, via Marco d'Oggiono — bilocale",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-10-02",
+          fonte: "BILOCALE LECCO.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          voci: [
+            { descrizione: "Punto luce (soggiorno, camera, bagno)", quantita: 3, unita: "pz", prezzoUnitario: 65.0, chiave: "elettrico:punto_luce_semplice" },
+            { descrizione: "Punto presa (tipo non specificato)", quantita: 13, unita: "pz", prezzoUnitario: 75.0, chiave: "elettrico:punto_presa" },
+            { descrizione: "Punto tapparella", quantita: 3, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:comando_tapparelle" },
+            { descrizione: "Punto telefono/rete", quantita: 2, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:predisposizione_telefono" },
+            { descrizione: "Punto TV", quantita: 2, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:presa_tv" },
+            { descrizione: "Punto campanello", quantita: 1, unita: "pz", prezzoUnitario: 80.0, chiave: "elettrico:punto_suoneria" },
+            { descrizione: "Predisposizione termostato", quantita: 3, unita: "pz", prezzoUnitario: 35.0, chiave: "elettrico:punto_termostato" },
+            { descrizione: "Predisposizione citofono", quantita: 1, unita: "pz", prezzoUnitario: 35.0, chiave: "elettrico:predisposizione_citofono" },
+            { descrizione: "Centralino incasso 24 moduli cablato (sezionatore, 2 magnetotermici differenziali luce/prese, differenziale puro cucina, 5 magnetotermici elettrodomestici, lavatrice, asciugatrice)", quantita: 1, unita: "corpo", prezzoUnitario: 500.0, chiave: "elettrico:centralino_24_moduli" }
+          ],
+          totaleDichiarato: 2380.0,
+          note: "Voci del documento (divise per stanza) raggruppate per tipo. Somma verificata = 2.380€, identico al documento. IVA esclusa. Esclusi: allacciamento caldaia, termostati ambiente, linea da contatore a centralino, citofono. Il documento scrive anche \"compreso frutti e placche\" dentro l'elenco degli esclusi: probabilmente frutti e placche sono inclusi, da chiarire con l'elettricista. Extra fuori preventivo 35€/h a persona. Stessi prezzi unitari del preventivo trilocale."
+        },
+        {
+          fornitore: "Elettricista \"padre e figlio\" (nome non scritto nel documento)",
+          immobile: "Lecco, via Marco d'Oggiono — trilocale",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-10-02",
+          fonte: "TRILOCALE LECCO.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          voci: [
+            { descrizione: "Punto luce (soggiorno ×2, 2 camere, 2 bagni, lavanderia, disimpegno)", quantita: 8, unita: "pz", prezzoUnitario: 65.0, chiave: "elettrico:punto_luce_semplice" },
+            { descrizione: "Punto presa (tipo non specificato)", quantita: 17, unita: "pz", prezzoUnitario: 75.0, chiave: "elettrico:punto_presa" },
+            { descrizione: "Punto tapparella", quantita: 4, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:comando_tapparelle" },
+            { descrizione: "Punto telefono/rete", quantita: 3, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:predisposizione_telefono" },
+            { descrizione: "Punto TV", quantita: 3, unita: "pz", prezzoUnitario: 70.0, chiave: "elettrico:presa_tv" },
+            { descrizione: "Punto campanello", quantita: 1, unita: "pz", prezzoUnitario: 80.0, chiave: "elettrico:punto_suoneria" },
+            { descrizione: "Predisposizione termostato", quantita: 7, unita: "pz", prezzoUnitario: 35.0, chiave: "elettrico:punto_termostato" },
+            { descrizione: "Predisposizione citofono", quantita: 1, unita: "pz", prezzoUnitario: 35.0, chiave: "elettrico:predisposizione_citofono" },
+            { descrizione: "Centralino incasso 24 moduli cablato (stessa composizione del bilocale)", quantita: 1, unita: "corpo", prezzoUnitario: 500.0, chiave: "elettrico:centralino_24_moduli" }
+          ],
+          totaleDichiarato: 3285.0,
+          note: "⚠️ NON TORNA: la somma delle righe del documento fa 3.355€, il totale scritto è 3.285€ (70€ in meno). 70€ è esattamente una riga da 70: probabilmente il punto telefono/rete della camera 2, che nel documento è scritto male (\"€ 70.\"). Da chiedere all'elettricista quale dei due importi vale. I prezzi unitari invece sono chiari e identici al preventivo bilocale. IVA esclusa, stesse esclusioni del bilocale."
         }
       ]
     },
@@ -250,6 +294,84 @@ const PREVENTIVI_DATA = {
           totaleConEnea: 4936.0,
           mqTotaliDichiarati: 15.12,
           note: "Nessun prezzo per singolo serramento nel documento, solo il totale finale. Il €/mq qui sotto è CALCOLATO DA ME (totale ÷ mq totali dichiarati nel documento), non un prezzo dichiarato dal fornitore — utile solo come stima aggregata, mischia finestre e cassonetti di taglie diverse."
+        },
+        {
+          fornitore: "RAM S.r.l. (Civate)",
+          immobile: "Lecco, via Marco d'Oggiono",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-09-26",
+          fonte: "Offerta-45924.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          voci: [
+            { descrizione: "Finestra 1 anta ribalta 700×1500mm (PVC Bellagio MD76, rovere gold est. / bianco int.)", quantita: 4, unita: "pz", prezzoUnitario: 421.2, chiave: "serramenti:finestra_pvc_1anta" },
+            { descrizione: "Finestra 2 ante 1200×1500mm", quantita: 1, unita: "pz", prezzoUnitario: 728.65, chiave: "serramenti:finestra_pvc_2ante" },
+            { descrizione: "Portafinestra 2 ante 1200×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 1218.1, chiave: "serramenti:portafinestra_pvc_2ante" },
+            { descrizione: "Portafinestra 1 anta 700×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 698.1, chiave: "serramenti:portafinestra_pvc_1anta" },
+            { descrizione: "Composto 2144×2333mm: 2 finestre a 2 ante + sottoluce fisso anticaduta (contato come 2 elementi)", quantita: 2, unita: "pz", prezzoUnitario: null, importoRigo: 2106.65, chiave: "serramenti:finestra_pvc_2ante_sottoluce" },
+            { descrizione: "Composto 2100×2333mm: 2 finestre a 2 ante + sottoluce fisso anticaduta (contato come 2 elementi)", quantita: 2, unita: "pz", prezzoUnitario: null, importoRigo: 2099.5, chiave: "serramenti:finestra_pvc_2ante_sottoluce" },
+            { descrizione: "Posa serramenti composti, con coprifili, rimozione e smaltimento esistente", quantita: 2, unita: "pz", prezzoUnitario: 400.0 },
+            { descrizione: "Posa serramenti, con coprifili, rimozione e smaltimento esistente", quantita: 10, unita: "pz", prezzoUnitario: 200.0, chiave: "serramenti:posa_smaltimento_pz" }
+          ],
+          totaleDichiarato: 13252.0,
+          note: "Offerta 45924. Prezzi dei serramenti qui sopra GIÀ SCONTATI del 35% (listino: 648 / 1.121 / 1.874 / 1.074 / 3.241 / 3.230€): lo sconto vale solo sui serramenti, non sulla posa. Listino 16.080€ − 35% = 10.452€ + posa 2.800€ = 13.252€, identico al documento. Pratica ENEA opzionale 150€ + IVA. Validità 15 gg. Cassonetti e tapparelle sono nell'offerta separata 45933."
+        },
+        {
+          fornitore: "RAM S.r.l. (Civate)",
+          immobile: "Lecco, via Marco d'Oggiono",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-09-28",
+          fonte: "Offerta-45933.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          voci: [
+            { descrizione: "Cassonetto alluminio coibentato 1100×400mm", quantita: 6, unita: "pz", prezzoUnitario: 186.55, chiave: "serramenti:cassonetto_alluminio" },
+            { descrizione: "Cassonetto alluminio coibentato 1600×400mm", quantita: 3, unita: "pz", prezzoUnitario: 196.3, chiave: "serramenti:cassonetto_alluminio" },
+            { descrizione: "Cassonetto alluminio coibentato 2500×400mm", quantita: 2, unita: "pz", prezzoUnitario: 223.6, chiave: "serramenti:cassonetto_alluminio" },
+            { descrizione: "Tapparella alluminio alta densità 700×1700 (4 pz, accessori compresi)", quantita: 4.76, unita: "mq", prezzoUnitario: null, importoRigo: 763.75, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 1200×1700 (1 pz)", quantita: 2.04, unita: "mq", prezzoUnitario: null, importoRigo: 230.425, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 1200×2600 (2 pz)", quantita: 6.24, unita: "mq", prezzoUnitario: null, importoRigo: 618.8, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 700×2600 (2 pz)", quantita: 3.64, unita: "mq", prezzoUnitario: null, importoRigo: 428.675, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 2150×2533 (1 pz)", quantita: 5.446, unita: "mq", prezzoUnitario: null, importoRigo: 479.4855, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 2100×2533 (1 pz)", quantita: 5.319, unita: "mq", prezzoUnitario: null, importoRigo: 470.223, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Motoriduttore serie 50 con accessori (impianto elettrico escluso)", quantita: 11, unita: "pz", prezzoUnitario: 180.0, chiave: "serramenti:motorizzazione_tapparella" },
+            { descrizione: "Posa cassonetto su ristrutturazione, con rimozione e smaltimento esistente", quantita: 11, unita: "pz", prezzoUnitario: 70.0, chiave: "serramenti:posa_cassonetto_pz" },
+            { descrizione: "Posa tapparella su ristrutturazione, con rimozione e smaltimento esistente", quantita: 11, unita: "pz", prezzoUnitario: 70.0, chiave: "serramenti:posa_tapparella_pz" }
+          ],
+          totaleDichiarato: 8666.76,
+          note: "Offerta 45933. Cassonetti e tapparelle qui sopra GIÀ SCONTATI del 35% (listino 7.918,09€); motori e posa non scontabili (3.520€). 7.918,09 − 2.771,33 + 3.520 = 8.666,76€, identico al documento. Le tapparelle sono convertite in €/mq (larghezza × altezza dichiarate) per confrontarle con gli altri fornitori."
+        },
+        {
+          fornitore: "G.T.C.I. Serramenti — Gitici (Calolziocorte)",
+          immobile: "Lecco, via Marco d'Oggiono",
+          immobileStato: "probabile — stesse 11 misure dei preventivi RAM e Valsecchi per Lecco, ma l'indirizzo non è scritto nel documento",
+          data: "2026-09-30",
+          fonte: "696 GUSMEROLI MARCO.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          fattoreSconto: 25050 / 26250,
+          voci: [
+            { descrizione: "Finestra 1 anta 700×1500mm (Finstral Nova-line FIN 77+8, PVC-alluminio)", quantita: 4, unita: "pz", prezzoUnitario: 720.0, chiave: "serramenti:finestra_pvc_1anta" },
+            { descrizione: "Finestra 2 ante 1200×1500mm", quantita: 1, unita: "pz", prezzoUnitario: 1170.0, chiave: "serramenti:finestra_pvc_2ante" },
+            { descrizione: "Porta balcone 2 ante 1200×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 1820.0, chiave: "serramenti:portafinestra_pvc_2ante" },
+            { descrizione: "Porta balcone 1 anta 700×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 1150.0, chiave: "serramenti:portafinestra_pvc_1anta" },
+            { descrizione: "Porta balcone 2 ante 2100×2333mm (unico elemento grande)", quantita: 1, unita: "pz", prezzoUnitario: 2460.0, chiave: "serramenti:portafinestra_2ante_grande" },
+            { descrizione: "Porta balcone 2 ante 2144×2333mm (unico elemento grande)", quantita: 1, unita: "pz", prezzoUnitario: 2510.0, chiave: "serramenti:portafinestra_2ante_grande" },
+            { descrizione: "Tapparella alluminio coibentato 700×1500 (4 pz)", quantita: 4.2, unita: "mq", prezzoUnitario: null, importoRigo: 680.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 1200×1500 (1 pz)", quantita: 1.8, unita: "mq", prezzoUnitario: null, importoRigo: 220.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 1200×2400 (2 pz)", quantita: 5.76, unita: "mq", prezzoUnitario: null, importoRigo: 680.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 700×2400 (2 pz)", quantita: 3.36, unita: "mq", prezzoUnitario: null, importoRigo: 400.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 2100×2333 (1 pz)", quantita: 4.899, unita: "mq", prezzoUnitario: null, importoRigo: 570.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Tapparella alluminio 2144×2333 (1 pz)", quantita: 5.002, unita: "mq", prezzoUnitario: null, importoRigo: 590.0, chiave: "serramenti:tapparella_alluminio_mq" },
+            { descrizione: "Guide e spazzolini antigraffio e antirumore", quantita: 1, unita: "corpo", prezzoUnitario: 450.0 },
+            { descrizione: "Rulli, staffe e accessori movimentazione", quantita: 11, unita: "pz", prezzoUnitario: 100.0 },
+            { descrizione: "Motorizzazione completa tapparelle", quantita: 11, unita: "pz", prezzoUnitario: 250.0, chiave: "serramenti:motorizzazione_tapparella" },
+            { descrizione: "Posa certificata serramenti (2.750€) + smaltimento vecchi infissi (550€)", quantita: 11, unita: "pz", prezzoUnitario: null, importoRigo: 3300.0, chiave: "serramenti:posa_smaltimento_pz" },
+            { descrizione: "Coprifili e finiture", quantita: 1, unita: "corpo", prezzoUnitario: 550.0 },
+            { descrizione: "Sconto sulla fornitura (22.400€ → 21.200€)", quantita: 1, unita: "corpo", prezzoUnitario: null, importoRigo: -1200.0 }
+          ],
+          totaleDichiarato: 25050.0,
+          note: "Preventivo n. 696, validità 10 gg. Finstral PVC-alluminio: fascia più alta di RAM e Valsecchi (PVC). Prezzi qui sopra = listino; nelle medie entrano scontati con il fattore 25.050/26.250. Somma verificata: serramenti 14.960 + tapparelle 7.440 = 22.400 (scontato 21.200) + posa, coprifili e smaltimento 3.850 = 25.050€ IVA esclusa, identico al documento (28.757€ IVA inclusa). Il documento riporta poi un EXTRASCONTO a 26.500€ come \"totale lavoro in opera\": va letto come IVA inclusa (altrimenti sarebbe più alto dell'imponibile), quindi circa 23.080€ IVA esclusa. Nelle medie ho tenuto prudentemente il 25.050 scritto. Le due aperture grandi da ~2100×2333 qui sono un'unica porta balcone a 2 ante, mentre RAM e Valsecchi le fanno in 2 finestre con sottoluce: per questo hanno una voce a parte. Allegato tecnico Finstral (senza prezzi): 696 GUSMEROLI MARCO FINCOMPOSER.pdf."
         }
       ]
     },
@@ -270,6 +392,39 @@ const PREVENTIVI_DATA = {
             { descrizione: "Posa piastrelle (solo manodopera, esclusi piastrella/colla/materiali)", quantita: 1, unita: "mq", prezzoUnitario: 25.0, chiave: "pavimenti:posa_piastrella_mq" }
           ],
           note: "Prezzi riferiti da Marco a voce, non presenti nei PDF originali. Utili subito come termine di paragone per i prossimi preventivi di piastrellisti."
+        },
+        {
+          fornitore: "Sirbu Anatolii (Calolziocorte)",
+          immobile: "Lecco, via Marco d'Oggiono — appartamento 1",
+          immobileStato: "probabile — cliente indicato come \"Lecco\", nessun indirizzo nel documento",
+          data: "2026-09-28",
+          fonte: "Preventivo 1072.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.22,
+          voci: [
+            { descrizione: "Posa pavimento (appartamento 1)", quantita: 94, unita: "mq", prezzoUnitario: 25.0, chiave: "pavimenti:posa_piastrella_mq" },
+            { descrizione: "Posa rivestimento 2 bagni + lavanderie (appartamento 1)", quantita: 1, unita: "corpo", prezzoUnitario: 2100.0 }
+          ],
+          totaleDichiarato: 4450.0,
+          note: "Solo posa (manodopera). Somma verificata = 4.450€ imponibile, identico al documento; con IVA 22% = 5.429€. Rivestimento a corpo per 2 bagni + lavanderie insieme: non confrontabile per singolo bagno."
+        },
+        {
+          fornitore: "Sirbu Anatolii (Calolziocorte)",
+          immobile: "Lecco, via Marco d'Oggiono — appartamento 2",
+          immobileStato: "probabile — cliente indicato come \"Lecco\", nessun indirizzo nel documento",
+          data: "2026-09-28",
+          fonte: "Preventivo 1073.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.22,
+          voci: [
+            { descrizione: "Posa pavimento (appartamento 2)", quantita: 45, unita: "mq", prezzoUnitario: 25.0, chiave: "pavimenti:posa_piastrella_mq" },
+            { descrizione: "Posa rivestimento bagno (appartamento 2)", quantita: 1, unita: "pz", prezzoUnitario: 600.0, chiave: "pavimenti:posa_rivestimento_bagno_pz" },
+            { descrizione: "Terrazza", quantita: 1, unita: "corpo", prezzoUnitario: 1000.0 }
+          ],
+          totaleDichiarato: 2725.0,
+          note: "Solo posa (manodopera). Somma verificata = 2.725€ imponibile, identico al documento; con IVA 22% = 3.324€. Terrazza a corpo senza metratura."
         }
       ]
     },
@@ -315,6 +470,20 @@ const PREVENTIVI_DATA = {
           ],
           totaleDichiarato: 330.0,
           note: "Non è un preventivo ma una fattura elettronica (TD01) già emessa: è il costo REALMENTE pagato, non una stima. Utile come termine di paragone reale, non come offerta concorrente."
+        },
+        {
+          fornitore: "Celini Imbiancature",
+          immobile: "non indicato (\"Appartamento piano 1°\")",
+          immobileStato: "da confermare con Marco — l'email non riporta l'indirizzo",
+          data: "2026-10-01",
+          fonte: "PHOTO-2026-10-01-20-41-28.jpg + PHOTO-2026-10-01-20-41-29.jpg (screenshot email)",
+          tipo: "dettaglio",
+          ivaInclusa: null,
+          voci: [
+            { descrizione: "Preparazione: protezione parti non trattate, carteggiatura meccanica e manuale, mano di fissativo acrilico, siliconatura con acrilico bianco", quantita: 1, unita: "mq", prezzoUnitario: 2.95, chiave: "murature:preparazione_fissativo_mq" },
+            { descrizione: "Imbiancatura: stuccature ove occorre, due mani di bianco, pulizia e scopertura", quantita: 1, unita: "mq", prezzoUnitario: 8.9, chiave: "murature:pittura_2mani_mq" }
+          ],
+          note: "Solo prezzi al mq, nessuna metratura e nessun totale (il fornitore non ha ricevuto l'Excel con le quantità). IVA non indicata."
         }
       ]
     }
