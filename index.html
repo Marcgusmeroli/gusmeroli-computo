@@ -246,7 +246,7 @@ async function sha256(text){
 async function tryUnlock(){
   const hash = await sha256(document.getElementById("lockInput").value);
   if(hash === PASSWORD_HASH){
-    localStorage.setItem(UNLOCK_KEY, "1");
+    try{ localStorage.setItem(UNLOCK_KEY, "1"); }catch(e){}
     document.getElementById("lock").classList.add("hidden");
     document.getElementById("app").classList.add("visible");
   } else {
@@ -254,7 +254,8 @@ async function tryUnlock(){
     document.getElementById("lockInput").value = "";
   }
 }
-if(localStorage.getItem(UNLOCK_KEY) === "1"){
+let giaSbloccato = false; try{ giaSbloccato = localStorage.getItem(UNLOCK_KEY) === "1"; }catch(e){}
+if(giaSbloccato){
   document.getElementById("lock").classList.add("hidden");
   document.getElementById("app").classList.add("visible");
 }
@@ -417,7 +418,7 @@ function renderEsclusi(){
 // ===== CALCOLATORE =====
 const QTY_KEY = "comparatore_preventivi_quantita_v1";
 function loadQty(){ try{ return JSON.parse(localStorage.getItem(QTY_KEY)) || {}; }catch(e){ return {}; } }
-function saveQty(q){ localStorage.setItem(QTY_KEY, JSON.stringify(q)); }
+function saveQty(q){ try{ localStorage.setItem(QTY_KEY, JSON.stringify(q)); }catch(e){} }
 let QTY = loadQty();
 
 // gruppi[chiave] = {unita, categoria, descrizione, prezzi:[...], nonCalcolabili non qui}
