@@ -7,7 +7,7 @@
 // dentro index.html.
 
 const PREVENTIVI_DATA = {
-  generato: "2026-10-03",
+  generato: "2026-10-08",
   categorie: [
     {
       id: "elettrico",
@@ -178,6 +178,49 @@ const PREVENTIVI_DATA = {
           ],
           totaleDichiarato: 6500.0,
           note: "Somma delle voci verificata = 6.500,00€, identico al totale scritto sul documento."
+        },
+        {
+          fornitore: "Boxeur — Maniaci Andrea (idraulico)",
+          immobile: "Lecco, via Marco d'Oggiono — trilocale",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-10-03",
+          fonte: "2026_10.1-Lecco.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.10,
+          voci: [
+            { descrizione: "Linea acqua fredda dal contatore a caldaia/collettori (multistrato coibentato 20×2)", quantita: 1, unita: "corpo", prezzoUnitario: 305.0, chiave: "idraulico:linea_acqua_contatore" },
+            { descrizione: "Attacchi caldaia (acqua, riscaldamento, gas, condensa, fumi) — caldaia e tubo fumi esclusi (fumi 9€/m)", quantita: 1, unita: "corpo", prezzoUnitario: 380.0, chiave: "idraulico:collegamento_caldaia" },
+            { descrizione: "Bagno zona giorno + attacchi cucina e lavatrice (collettore, Geberit, carico/scarico)", quantita: 1, unita: "corpo", prezzoUnitario: 1710.0, chiave: "idraulico:impianto_sanitario_completo" },
+            { descrizione: "Secondo bagno zona notte (vaso, bidet, lavabo; collettore, Geberit)", quantita: 1, unita: "corpo", prezzoUnitario: 960.0, chiave: "idraulico:impianto_sanitario_completo" },
+            { descrizione: "Impianto riscaldamento a radiatori (collettore + tubazioni multistrato)", quantita: 1, unita: "corpo", prezzoUnitario: 1050.0, chiave: "idraulico:tubazioni_termosifoni" },
+            { descrizione: "Nuova linea gas da contatore a caldaia e fornello", quantita: 1, unita: "corpo", prezzoUnitario: 370.0, chiave: "idraulico:linea_gas" },
+            { descrizione: "Predisposizione condizionamento a split (3 cassette murali, linee gas e condensa)", quantita: 1, unita: "corpo", prezzoUnitario: 1025.0, chiave: "idraulico:predisposizione_clima_3split" },
+            { descrizione: "Giornate di lavoro per montaggi", quantita: 3, unita: "giorno", prezzoUnitario: null, importoRigo: 870.0, chiave: "idraulico:giornata_montaggio" }
+          ],
+          totaleDichiarato: 6670.0,
+          note: "Preventivo bilocale/trilocale del 3/10/26, parte TRILOCALE. Somma delle voci verificata = 6.670€, identico al documento. IVA esclusa (aliquota non scritta, presumibilmente 10%). Caldaia fornita da noi. Pagamento 40/40/20, validità 15 gg. Totale complessivo dichiarato bilocale + trilocale: 11.620€."
+        },
+        {
+          fornitore: "Boxeur — Maniaci Andrea (idraulico)",
+          immobile: "Lecco, via Marco d'Oggiono — bilocale",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-10-03",
+          fonte: "2026_10.1-Lecco.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.10,
+          voci: [
+            { descrizione: "Linea acqua fredda dal contatore a caldaia/collettori (multistrato coibentato 20×2)", quantita: 1, unita: "corpo", prezzoUnitario: 305.0, chiave: "idraulico:linea_acqua_contatore" },
+            { descrizione: "Attacchi caldaia (acqua, riscaldamento, gas, condensa, fumi) — caldaia e tubo fumi esclusi (fumi 9€/m)", quantita: 1, unita: "corpo", prezzoUnitario: 380.0, chiave: "idraulico:collegamento_caldaia" },
+            { descrizione: "Bagno + attacchi cucina e lavatrice (collettore, Geberit, carico/scarico)", quantita: 1, unita: "corpo", prezzoUnitario: 1710.0, chiave: "idraulico:impianto_sanitario_completo" },
+            { descrizione: "Impianto riscaldamento a radiatori (collettore + tubazioni multistrato)", quantita: 1, unita: "corpo", prezzoUnitario: 670.0, chiave: "idraulico:tubazioni_termosifoni" },
+            { descrizione: "Nuova linea gas da contatore a caldaia e fornello", quantita: 1, unita: "corpo", prezzoUnitario: 370.0, chiave: "idraulico:linea_gas" },
+            { descrizione: "Predisposizione condizionamento a split (3 cassette murali, linee gas e condensa)", quantita: 1, unita: "corpo", prezzoUnitario: 780.0, chiave: "idraulico:predisposizione_clima_3split" },
+            { descrizione: "Giornate di lavoro per montaggi (2 e ½)", quantita: 2.5, unita: "giorno", prezzoUnitario: null, importoRigo: 720.0, chiave: "idraulico:giornata_montaggio" }
+          ],
+          totaleDichiarato: 4950.0,
+          note: "Preventivo bilocale/trilocale del 3/10/26, parte BILOCALE. ⚠️ NON TORNA: le voci sommano 4.935€ ma il documento dichiara 4.950€ (+15€), quindi anche il totale complessivo 11.620€ dovrebbe essere 11.605€. Ipotesi: errore su una voce (es. riscaldamento 685 invece di 670) — da chiedere al fornitore. IVA esclusa. Caldaia fornita da noi. Pagamento 40/40/20, validità 15 gg."
         }
       ]
     },
@@ -372,6 +415,39 @@ const PREVENTIVI_DATA = {
           ],
           totaleDichiarato: 25050.0,
           note: "Preventivo n. 696, validità 10 gg. Finstral PVC-alluminio: fascia più alta di RAM e Valsecchi (PVC). Prezzi qui sopra = listino; nelle medie entrano scontati con il fattore 25.050/26.250. Somma verificata: serramenti 14.960 + tapparelle 7.440 = 22.400 (scontato 21.200) + posa, coprifili e smaltimento 3.850 = 25.050€ IVA esclusa, identico al documento (28.757€ IVA inclusa). Il documento riporta poi un EXTRASCONTO a 26.500€ come \"totale lavoro in opera\": va letto come IVA inclusa (altrimenti sarebbe più alto dell'imponibile), quindi circa 23.080€ IVA esclusa. Nelle medie ho tenuto prudentemente il 25.050 scritto. Le due aperture grandi da ~2100×2333 qui sono un'unica porta balcone a 2 ante, mentre RAM e Valsecchi le fanno in 2 finestre con sottoluce: per questo hanno una voce a parte. Allegato tecnico Finstral (senza prezzi): 696 GUSMEROLI MARCO FINCOMPOSER.pdf."
+        },
+        {
+          fornitore: "Alborghetti S.r.l. (Lecco)",
+          immobile: "Lecco, via Marco d'Oggiono",
+          immobileStato: "indirizzo esplicito nel documento",
+          data: "2026-10-05",
+          fonte: "162 Rif. GUSMEROLI - serramenti - cassonetti pvc  tapparelle in pvc motorizzate.pdf",
+          tipo: "dettaglio",
+          ivaInclusa: false,
+          ivaAliquota: 0.10,
+          voci: [
+            { descrizione: "Finestra 1 anta 700×1500mm (PVC WND Konfort Line, bianco int. / rovere dorato est., Uw 1,2)", quantita: 4, unita: "pz", prezzoUnitario: 429.75, chiave: "serramenti:finestra_pvc_1anta" },
+            { descrizione: "Finestra 2 ante 1200×1500mm", quantita: 1, unita: "pz", prezzoUnitario: 789.75, chiave: "serramenti:finestra_pvc_2ante" },
+            { descrizione: "Portafinestra 2 ante 1200×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 1226.25, chiave: "serramenti:portafinestra_pvc_2ante" },
+            { descrizione: "Portafinestra 1 anta 700×2400mm", quantita: 2, unita: "pz", prezzoUnitario: 690.75, chiave: "serramenti:portafinestra_pvc_1anta" },
+            { descrizione: "Portafinestra 3 ante (2 apribili + fisso laterale) 2100×2333mm, unico elemento", quantita: 1, unita: "pz", prezzoUnitario: 2047.5, chiave: "serramenti:portafinestra_2ante_grande" },
+            { descrizione: "Portafinestra 3 ante (2 apribili + fisso laterale) 2144×2333mm, unico elemento", quantita: 1, unita: "pz", prezzoUnitario: 2055.75, chiave: "serramenti:portafinestra_2ante_grande" },
+            { descrizione: "Cassonetto PVC 700×400mm", quantita: 6, unita: "pz", prezzoUnitario: 180.75, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Cassonetto PVC 1200×400mm", quantita: 3, unita: "pz", prezzoUnitario: 201.75, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Cassonetto PVC 2100/2144×400mm", quantita: 2, unita: "pz", prezzoUnitario: 274.5, chiave: "serramenti:cassonetto_pvc" },
+            { descrizione: "Tapparella PVC Serena 4,5 kg 730×1650 (4 pz)", quantita: 4.818, unita: "mq", prezzoUnitario: null, importoRigo: 225.0, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Tapparella PVC 1230×1560 (1 pz)", quantita: 1.9188, unita: "mq", prezzoUnitario: null, importoRigo: 71.625, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Tapparella PVC 1230×2550 (2 pz)", quantita: 6.273, unita: "mq", prezzoUnitario: null, importoRigo: 235.5, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Tapparella PVC 730×2550 (2 pz)", quantita: 3.723, unita: "mq", prezzoUnitario: null, importoRigo: 139.5, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Tapparella PVC 2130×2483 (1 pz)", quantita: 5.2888, unita: "mq", prezzoUnitario: null, importoRigo: 198.75, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Tapparella PVC 2274×2483 (1 pz)", quantita: 5.6463, unita: "mq", prezzoUnitario: null, importoRigo: 211.875, chiave: "serramenti:tapparella_pvc_mq" },
+            { descrizione: "Kit accessori motorizzazione (calotta, rullo, staffa) + motore 50 Nm (listino 75 + 50€)", quantita: 11, unita: "pz", prezzoUnitario: 93.75, chiave: "serramenti:motorizzazione_tapparella" },
+            { descrizione: "Guide alluminio portafinestra (coppia)", quantita: 6, unita: "coppie", prezzoUnitario: 126.0 },
+            { descrizione: "Guide alluminio finestra (coppia)", quantita: 5, unita: "coppie", prezzoUnitario: 80.25 },
+            { descrizione: "Posa serramenti, cassonetti e tapparelle (non scontata)", quantita: 1, unita: "corpo", prezzoUnitario: 1500.0 }
+          ],
+          totaleDichiarato: 17455.5,
+          note: "Preventivo n. 162, stesse 11 aperture di RAM/Valsecchi/Gitici. Prezzi qui sopra GIÀ SCONTATI del 25% (sconto personalizzato su tutta la fornitura; la posa 1.500€ non è scontata). Listino verificato: serramenti 13.928 + cassonetti 2.985 + tapparelle 4.361 = 21.274€ (−25% = 15.955,50€) + posa 1.500 = 17.455,50€ IVA esclusa, identico al documento (19.201,05€ con IVA 10%). Tapparelle convertite in €/mq. Le aperture grandi ~2100×2333 sono un unico elemento a 3 ante (come Gitici), quindi stessa chiave. Esclusi opere murarie, linee elettriche, ponteggi; smaltimento vecchi infissi non citato. Consegna 30/60 gg, pagamento 50% acconto + saldo a merce pronta, validità 15-20 gg."
         }
       ]
     },
